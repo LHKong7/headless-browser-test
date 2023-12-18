@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Headless Browser Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" async></script>
+</head>
+<body>
+    <canvas id="myCanvas" width="500" height="500"></canvas>
+    <button id="downloadPNG">DownLoad PNG</button>
+    <button id="downloadPDF">DownLoad PDF</button>
+</body>
+<script type="module">
+    window.onload = function() {
+        window.jsPDF = window.jspdf.jsPDF;
+
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#FF0000";
+        ctx.fillRect(0, 0, 150, 75);
+
+        const downloadPNG = document.getElementById("downloadPNG");
+        downloadPNG.addEventListener("click", function() {
+            const canvas = document.getElementById("myCanvas");
+            const pngUrl = canvas.toDataURL("image/png");
+            const downloadLink = document.createElement("a");
+            downloadLink.href = pngUrl;
+            downloadLink.download = "image.png";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        });
+
+        const downloadPDF = document.getElementById("downloadPDF");
+        downloadPDF.addEventListener("click", function() {
+            const canvas = document.getElementById("myCanvas");
+            const pngUrl = canvas.toDataURL("image/png");
+            const pdf = new jsPDF();
+            pdf.addImage(pngUrl, "PNG", 0, 0);
+            pdf.save("download.pdf");
+        });
+    }
+</script>
+</html>
